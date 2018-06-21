@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>Atendimento médico</title>
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="/assets/fullcalendar/lib/jquery.min.js"></script>
 
 </head>
 <body>
@@ -18,7 +19,33 @@
 </div>
 
 
+<script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+<script>
 
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('754e61bbd35b46f18454', {
+        cluster: 'us2'
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(response) {
+
+        var msg = '<div class="alert alert-warning alert-dismissible fade show" role="alert">';
+            // conteudo da mensagem
+            msg += '<p>O paciente <strong>' + response.nome + '</strong>' +
+                ' foi agendado para o dia <strong>'+ response.dia +'</strong>' +
+                ' às <strong>' + response.hora + '</strong></p>';
+        msg += '<button type="button" class="close" data-dismiss="alert" aria-label="Close">';
+        msg += '    <span aria-hidden="true">&times;</span>';
+        msg += '</button>';
+        msg += '</div>';
+
+        $("#atendimento").append(msg);
+
+    });
+</script>
 
 </body>
 </html>

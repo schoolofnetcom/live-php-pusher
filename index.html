@@ -3,7 +3,12 @@
 <head>
     <meta charset="utf-8">
     <title>Agenda de atendimentos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/fullcalendar/fullcalendar.css">
+    <link rel="stylesheet" href="/assets/fullcalendar/fullcalendar.print.css" media="print">
 
+    <script src="/assets/fullcalendar/lib/moment.min.js"></script>
+    <script src="/assets/fullcalendar/lib/jquery.min.js"></script>
 
 </head>
 <body>
@@ -19,11 +24,57 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
+        $("#agenda").fullCalendar({
+            header: {
+                left: "prev,today,next",
+                center: "title",
+                right: "month,agendaWeek,agendaDay"
+            },
+            defaultView: "agendaWeek",
+            selectable: true,
+            selectHelper: true,
+            events: "http://localhost:8000/php/listar_compromissos.php",
+            minTime: "08:00:00",
+            maxTime: "19:00:00",
+            slotDuration: '00:10:00',
+            slotLabelFormat: "HH:mm",
+            allDaySlot: false,
+            select: function(start, end) {
+                var inicio = moment(start).format("YYYY-MM-DD HH:mm");
+                var fim = moment(end).format("YYYY-MM-DD HH:mm");
 
+                var nome = window.prompt("Digite o nome do paciente:");
+
+                var dados = {
+                    nome: nome,
+                    inicio: inicio,
+                    fim: fim
+                };
+
+                $.post("http://localhost:8000/php/salvar_compromisso.php", dados, function(response){
+                    if (response.status == 'success') {
+
+                        var agendamento = {
+                            title: response.title,
+                            start: response.start,
+                            end: response.end
+                        };
+
+                        $("#agenda").fullCalendar('renderEvent', agendamento, true);
+                        alert(response.mensagem);
+
+                    } else {
+                        alert(response.mensagem);
+                    }
+                }, 'json');
+
+            }
+        });
     });
 </script>
 
 
-
+<script src="/assets/fullcalendar/fullcalendar.min.js"></script>
+<script src="/assets/fullcalendar/locale/pt-br.js"></script>
 </body>
 </html>

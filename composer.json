@@ -6,5 +6,7 @@
             "email": "gisonc.reis@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "pusher/pusher-php-server": "^3.0"
+    }
 }

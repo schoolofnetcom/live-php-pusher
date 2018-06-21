@@ -1,7 +1,5 @@
 <?php
 
-echo date("d.m.Y H:i:s");exit;
-
 header('Content-Type: application/json');
 
 require 'conexao.php';
